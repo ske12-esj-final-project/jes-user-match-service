@@ -22,12 +22,14 @@ let getKills = (userID, kills) => {
     })
 
     let weapons = _.countBy(ownKills, 'weaponUsed')
-    return _.map(Object.keys(weapons), weapon => {
+    let weaponKills = _.map(Object.keys(weapons), weapon => {
         return {
             name: weapon,
             kills: weapons[weapon]
         }
     })
+
+    return _.orderBy(weaponKills, ['kills'], ['desc'])
 }
 
 router.get('/:user_id', (req, res) => {
