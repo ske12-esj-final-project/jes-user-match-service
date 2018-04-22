@@ -6,7 +6,7 @@ const API = require('./constants')
 
 let getJoinedMatches = (userID, matches) => {
     return matches.map(match => {
-        return _.includes(match.players, userID)
+        if (_.includes(match.players, userID)) return match
     })
 }
 
@@ -25,7 +25,7 @@ let getNumberKills = (userID, kills) => {
 router.get('/:user_id', (req, res) => {
     let userID = req.params.user_id
     
-    axios.get(API.USER + `/${userID}`).then(userRes => {
+    axios.get(API.USER + `/u/${userID}`).then(userRes => {
         axios.get(API.MATCH).then(matchRes => {
             axios.get(API.KILL).then(killRes => {
                 let user = userRes.data
@@ -56,3 +56,5 @@ router.get('/:user_id', (req, res) => {
         return res.status(500, 'Something is wrong with USER API ?')
     })
 })
+
+module.exports = router
