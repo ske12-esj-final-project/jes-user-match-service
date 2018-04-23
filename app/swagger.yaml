@@ -1,0 +1,137 @@
+swagger: "3.0.1"
+info:
+  description: JES match-service API documentation
+  version: 1.0.0
+  title: Just Enjoy Shooting (User - Match)
+schemes:
+  - http
+host: jes.api.usermatch.safesuk.me
+basePath: /v1
+tags:
+  - name: profile
+    description: Operations about profile
+tags:
+  - name: killfeed
+    description: Operations about killfeed
+consumes:
+  - application/json
+produces:
+  - application/json
+definitions:
+  Killfeed:
+    type: object
+    properties:
+      killer:
+        type: string
+        description: username of a player who performed killing
+      victim:
+        type: string
+        description: username of a player whom got killed
+      victimPos:
+        type: object
+        description: victim's position as { x,y,z }
+        properties:
+          x:
+            type: number
+          y:
+            type: number
+          z:
+            type: number
+      weaponUsed:
+        type: string
+        description: name of weapon that killer used
+  Match:
+    type: object
+    properties:
+      id:
+        type: string
+        description: id of match
+        format: objectId
+      dateCreated:
+        type: string
+        description: date/time match started
+      players:
+        type: array
+        items:
+          type: string
+          description: User id
+      duration:
+        type: number
+        description: duration of a match
+      winner:
+        type: string
+        description: user id of the last man standing
+  Kill:
+    type: object
+    properties:
+      name:
+        type: string
+        description: weapon name
+      kills:
+        type: integer
+        description: number of kills performed using this weapon
+  Profile:
+    type: object
+    properties:
+      username:
+        type: string
+        description: username of a user
+      score:
+        type: integer
+        description: current score of a user
+      clothIndex:
+        type: integer
+        description: current index of cloth of a user
+      recentMatches:
+        type: array
+        description: recent matches of player
+        items:
+          $ref: '#/definitions/Match'
+      kills:
+        type: array
+        items:
+          $ref: '#/definitions/Kill'
+      numWins:
+        type: integer
+        description: number of matches player wins
+
+paths:
+  /profile/{id}:
+    get:
+      tags:
+        - profile
+      description: Returns a profile of a user
+      operationId: getProfile
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Profile'
+
+        500:
+          description: Cannot return profile
+  
+  /killfeed/{id}:
+    get:
+      tags:
+        - killfeed
+      description: return kills occurred in a match
+      operationId: getKillfeed
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        200:
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Killfeed'
+
+
+
