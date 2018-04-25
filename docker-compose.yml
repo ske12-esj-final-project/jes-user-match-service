@@ -1,0 +1,10 @@
+version: '3'
+services:
+  jes-user-match-service:
+    container_name: jes-user-match-service
+    build: ./app
+    restart: unless-stopped
+    ports:
+      - $PORT:$PORT
+    environment:
+      PORT: $PORT
